@@ -126,7 +126,8 @@ class BacktestingEngine:
             execution_price = current_price * (1 - self.slippage_bps / 10000)
 
         # Calculate transaction costs
-        transaction_cost = self.calculate_transaction_costs(symbol, shares_to_trade, execution_price, trade_type)
+        transaction_cost = abs(shares_to_trade) * execution_price * self.commission_per_trade
+        # Slippage is already included in execution_price; charge it once.
 
         # Update positions and cash
         trade_value = abs(shares_to_trade) * execution_price
@@ -203,7 +204,7 @@ class BacktestingEngine:
         """
         # Reset portfolio state
         self.__init__(self.initial_capital, self.commission_per_trade,
-                      self.slippage_model, self.slippage_bps, self.max_position_size)
+                      self.slippage_model, self.slippage_bps, self.max_position_size, self.risk_free_rate)
 
         # Determine date range
         all_dates = set()
@@ -259,7 +260,8 @@ class BacktestingEngine:
         # Risk metrics
         if len(portfolio_returns) > 1:
             volatility = portfolio_returns.std() * np.sqrt(252)  # Annualized
-            sharpe_ratio = (portfolio_returns.mean() - self.risk_free_rate/252) / portfolio_returns.std() * np.sqrt(252)
+            sharpe_ratio = ((portfolio_returns.mean() - self.risk_free_rate/252) / portfolio_returns.std() * np.sqrt(252)
+                            if portfolio_returns.std() > 0 else 0.0)
 
             # Maximum drawdown
             cumulative = (1 + portfolio_returns).cumprod()
