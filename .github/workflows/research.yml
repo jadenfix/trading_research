@@ -1,0 +1,15 @@
+name: Native research workflow
+on: [push, pull_request]
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install -r requirements-research.txt
+      - run: bash build_cpp.sh
+      - run: python -m unittest discover -s tests -v
+      - run: python -m research.workbench --rows 512 --output artifacts
+      - uses: actions/upload-artifact@v4
+        with: {name: research-receipt, path: artifacts/}

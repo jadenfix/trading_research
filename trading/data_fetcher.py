@@ -1,7 +1,6 @@
 """
 Market data fetcher using Yahoo Finance API
 """
-import yfinance as yf
 import pandas as pd
 from datetime import datetime, timedelta
 
@@ -26,6 +25,7 @@ class DataFetcher:
             pandas.DataFrame: Historical price data
         """
         try:
+            import yfinance as yf
             ticker = yf.Ticker(symbol)
             data = ticker.history(period=period, interval=interval)
             return data
@@ -44,6 +44,7 @@ class DataFetcher:
             float: Current price or None if error
         """
         try:
+            import yfinance as yf
             ticker = yf.Ticker(symbol)
             info = ticker.history(period="1d")
             if not info.empty:

@@ -1,33 +1,4 @@
-# Virtual environments
-trading_env/
-venv/
-.env/
-
-# Python cache files
+cpp_engine/build/
+artifacts/
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Temporary files
-*.tmp
-*.temp
-
-# Framework validation reports
-framework_validation_report_*.json
-framework_validation_reports/
+*.egg-info/
