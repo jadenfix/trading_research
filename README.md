@@ -20,3 +20,7 @@ The native core computes positions at time t from prices through t−1. Every ex
 The CMake default builds `libresearch_native` and a real input/causality test without Boost, pybind11, GPU or AVX requirements. `research.native` loads that actual library through ctypes and raises if it is absent. Local call timing includes library loading and validation and is **not exchange latency**. No nanosecond, throughput or profitability guarantee is made.
 
 Earlier C++ risk/order/DPDK/binding sketches remain in the source tree. Their manifest referenced absent files and is preserved as `cpp_engine/CMakeLists.experimental.txt`; those components are not part of the working lane. Rust and Go prototypes remain separately available, with their own unfinished interfaces. Historical report JSONs are archival examples, not current measured proof. Python market fetching lazily imports optional `yfinance`; this workflow makes no network call or submits any order.
+
+## Installed CLI
+
+For a Linux installed-package smoke, first build the native source checkout, then `python -m pip install .` and run `trading-research --native-library /absolute/path/to/cpp_engine/build/libresearch_native.so --output artifacts`. The installed package has no bundled binary; the CLI requires the explicitly built native library outside its source checkout.

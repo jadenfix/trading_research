@@ -28,10 +28,10 @@ def load_data(csv=None, seed=7, rows=512):
     return frame, provenance
 
 
-def run(csv=None, output="artifacts", seed=7, rows=512):
+def run(csv=None, output="artifacts", seed=7, rows=512, native_library=None):
     frame, provenance = load_data(csv, seed, rows)
     started = time.perf_counter()
-    native = signals(frame.Close.to_numpy())
+    native = signals(frame.Close.to_numpy(), library=native_library)
     measured_ms = (time.perf_counter() - started) * 1000
     reference = MovingAverageCrossover().generate_signals(frame).signal.shift(1).fillna(0).astype(int)
     np.testing.assert_array_equal(native, reference.to_numpy())
@@ -57,6 +57,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--csv");parser.add_argument("--output",default="artifacts")
     parser.add_argument("--rows",type=int,default=512);parser.add_argument("--seed",type=int,default=7)
-    args=parser.parse_args();run(args.csv,args.output,args.seed,args.rows)
+    parser.add_argument("--native-library", help="Explicit built library path, required outside source checkout")
+    args=parser.parse_args();run(args.csv,args.output,args.seed,args.rows,args.native_library)
 
 if __name__ == "__main__": main()
